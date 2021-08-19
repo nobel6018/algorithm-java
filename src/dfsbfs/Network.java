@@ -20,6 +20,7 @@ public class Network {
 
             visited[i] = true;
 
+            // Todo: change priority queue (heap) to queue
             PriorityQueue<Integer> priorityQueue = new PriorityQueue<>();
             priorityQueue.add(i);
 
