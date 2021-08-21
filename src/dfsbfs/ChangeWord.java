@@ -5,8 +5,8 @@
  * */
 package dfsbfs;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 public class ChangeWord {
@@ -14,12 +14,12 @@ public class ChangeWord {
     private static class Element {
         private final String word;
         private final int changeCount;
-        private final int stage;
+        private final LinkedList<String> availableWords;
 
-        public Element(String word, int changeCount, int stage) {
+        public Element(String word, int changeCount, LinkedList<String> words) {
             this.word = word;
             this.changeCount = changeCount;
-            this.stage = stage;
+            this.availableWords = words;
         }
 
         public String getWord() {
@@ -30,34 +30,29 @@ public class ChangeWord {
             return changeCount;
         }
 
-        public int getStage() {
-            return stage;
+        public LinkedList<String> getAvailableWords() {
+            return availableWords;
         }
     }
 
     public static int solution(String begin, String target, String[] words) {
         Queue<Element> queue = new LinkedList<>();
-        queue.add(new Element(begin, 0, 0));
+        queue.add(new Element(begin, 0, new LinkedList<>(List.of(words))));
 
-        ArrayList<Integer> answers = new ArrayList<>();
-        for (int i = 0; i < words.length; i++) {
-            while (!queue.isEmpty()) {
-                if (queue.peek().getStage() != i) {
-                    break;
-                }
+        while (!queue.isEmpty()) {
+            Element element = queue.poll();
 
-                Element element = queue.poll();
-                if (isDifferentOneChar(element.getWord(), words[i])) {
-                    if (words[i].equals(target)) {
-                        answers.add(element.getChangeCount() + 1);
+            for (String candidate : element.getAvailableWords()) {
+                if (isDifferentOneChar(element.getWord(), candidate)) {
+                    if (candidate.equals(target)) {
+                        return element.getChangeCount() + 1;
                     }
-                    queue.add(new Element(words[i], element.getChangeCount() + 1, element.getStage() + 1));
-                }
-                queue.add(new Element(element.getWord(), element.getChangeCount(), element.getStage() + 1));
-            }
 
-            if (answers.size() > 0) {
-                return answers.stream().mapToInt(it -> it).min().orElse(0);
+                    LinkedList<String> linkedList = new LinkedList<>(element.getAvailableWords());
+                    linkedList.remove(candidate);
+
+                    queue.add(new Element(candidate, element.getChangeCount() + 1, linkedList));
+                }
             }
         }
 
