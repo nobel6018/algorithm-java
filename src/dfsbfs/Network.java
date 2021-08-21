@@ -5,7 +5,8 @@
  * */
 package dfsbfs;
 
-import java.util.PriorityQueue;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class Network {
     public static int solution(int n, int[][] computers) {
@@ -20,17 +21,16 @@ public class Network {
 
             visited[i] = true;
 
-            // Todo: change priority queue (heap) to queue
-            PriorityQueue<Integer> priorityQueue = new PriorityQueue<>();
-            priorityQueue.add(i);
+            Queue<Integer> queue = new LinkedList<>();
+            queue.add(i);
 
-            while (!priorityQueue.isEmpty()) {
-                Integer node = priorityQueue.poll();
+            while (!queue.isEmpty()) {
+                Integer node = queue.poll();
                 for (int j = 0; j < n; j++) {
                     int isConnected = computers[node][j];
                     if (isConnected == 1 && !visited[j]) {
                         visited[j] = true;
-                        priorityQueue.add(j);
+                        queue.add(j);
                     }
                 }
             }
