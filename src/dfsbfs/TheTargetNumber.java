@@ -9,20 +9,26 @@ public class TheTargetNumber {
 
     private static int answer = 0;
 
-    private static void dfs(int[] numbers, int target, int stage, int result) {
-        if (stage == numbers.length) {
-            if (target == result) {
+    private static int[] myNumberList;
+    private static int myTarget;
+
+    private static void dfs(int stage, int result) {
+        if (stage == myNumberList.length) {
+            if (myTarget == result) {
                 answer++;
             }
             return;
         }
 
-        dfs(numbers, target, stage + 1, result + numbers[stage]);
-        dfs(numbers, target, stage + 1, result - numbers[stage]);
+        dfs(stage + 1, result + myNumberList[stage]);
+        dfs(stage + 1, result - myNumberList[stage]);
     }
 
     public static int solution(int[] numbers, int target) {
-        dfs(numbers, target, 0, 0);
+        myNumberList = numbers;
+        myTarget = target;
+
+        dfs(0, 0);
 
         return answer;
     }
